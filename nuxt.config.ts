@@ -18,5 +18,8 @@ export default defineNuxtConfig({
       },
     ],
   ],
+  runtimeConfig: {
+    jwtSecret: process.env.JWT_SECRET,
+  },
   plugins: ["plugins/sweetalert2.ts", "plugins/bootstrap.client.ts"],
 });

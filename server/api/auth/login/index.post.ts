@@ -12,14 +12,8 @@ export default defineEventHandler(async (event) => {
   const validate: { [key: string]: string } = {};
 
   try {
-    // ตรวจสอบการใส่ข้อมูลของ username และ password
-    if (!username) {
-      validate.username = "โปรดระบุ";
-    }
-
-    if (!password) {
-      validate.password = "โปรดระบุ";
-    }
+    if (!username) validate.username = "โปรดระบุ";
+    if (!password) validate.password = "โปรดระบุ";
 
     if (Object.keys(validate).length > 0) {
       return {
@@ -29,12 +23,7 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    // ค้นหาผู้ใช้จากฐานข้อมูล
-    const user = await prisma.user.findUnique({
-      where: { username },
-    });
-
-    // ตรวจสอบว่าพบผู้ใช้หรือไม่
+    const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
       return {
         status: false,
@@ -43,7 +32,6 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    // ตรวจสอบรหัสผ่าน
     const isValidatePassword = await comparePassword(password, user.password);
     if (!isValidatePassword) {
       return {
@@ -53,26 +41,21 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    // สร้าง Access Token
+    // ตรวจสอบและลบ Refresh Token ที่มีอยู่ก่อนสร้างใหม่
+    await prisma.refreshToken.deleteMany({
+      where: { user_id: user.id },
+    });
+
     const accessToken = jwt.sign(
-      {
-        user_id: user.id,
-        username: user.username,
-      },
+      { user_id: user.id, username: user.username },
       jwtSecret,
       { expiresIn: "15m" }
     );
 
-    // สร้าง Refresh Token
-    const refreshToken = jwt.sign(
-      {
-        user_id: user.id,
-      },
-      jwtSecret,
-      { expiresIn: "30m" }
-    );
+    const refreshToken = jwt.sign({ user_id: user.id }, jwtSecret, {
+      expiresIn: "30m",
+    });
 
-    // บันทึก Refresh Token ลงในฐานข้อมูล
     await prisma.refreshToken.create({
       data: {
         user_id: user.id,
@@ -81,13 +64,12 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // ส่งค่า Access Token และ Refresh Token กลับไปยัง client
     return {
       status: true,
       code: HttpStatusCode.OK,
       data: {
-        accessToken,
-        refreshToken,
+        access_token: accessToken,
+        refresh_token: refreshToken,
       },
     };
   } catch (error) {

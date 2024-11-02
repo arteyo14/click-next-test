@@ -2,6 +2,12 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": { 
-    "types": ["./core/shared/types/nitro.d.ts"]
+    "types": ["./core/shared/types/nitro.d.ts"],
+    // "module": "commonjs",
+    // "moduleResolution": "node",
+    // "esModuleInterop": true,
+    // "resolveJsonModule": true,
+    // "skipLibCheck": true,
+    // "target": "esnext",
   }
 }

@@ -1,8 +1,8 @@
+import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "~/utils/password";
 
+const prisma = new PrismaClient();
 export const userSeed = async () => {
-  const { prisma } = useNitroApp();
-
   await prisma.user.deleteMany();
 
   await prisma.$executeRaw`ALTER SEQUENCE user_id_seq RESTART WITH 1`;

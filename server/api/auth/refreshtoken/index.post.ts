@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
   try {
     const { refresh_token } = await readBody(event);
 
+    const decoded = jwt.verify(refresh_token, jwtSecret) as { user_id: string };
+    const userId = decoded.user_id;
+
     if (!refresh_token) {
       return {
         status: false,
@@ -21,8 +24,11 @@ export default defineEventHandler(async (event) => {
     }
 
     // ตรวจสอบว่า refreshToken มีอยู่ในฐานข้อมูลและยังไม่หมดอายุ
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: refresh_token,
+    const storedToken = await prisma.refreshToken.findFirst({
+      where: {
+        refresh_token: refresh_token,
+        user_id: Number(userId),
+      },
     });
 
     if (!storedToken) {

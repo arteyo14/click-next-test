@@ -1,44 +1,67 @@
 import { PrismaClient } from "@prisma/client";
 import HttpStatusCode from "~/core/shared/http/HttpStatusCode";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
+const config = useRuntimeConfig();
+const jwtSecret = config.jwtSecret;
 
 export default defineEventHandler(async (event) => {
   try {
     const { refresh_token } = await readBody(event);
 
+    // ตรวจสอบว่า refresh_token มีค่าหรือไม่
     if (!refresh_token) {
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: {
-          message: "No Refresh Token Provided",
-        },
+        error: { message: "No Refresh Token Provided" },
       };
     }
 
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: refresh_token,
+    // ตรวจสอบและถอดรหัส user_id จาก refresh_token
+    const decoded = jwt.verify(refresh_token, jwtSecret) as { user_id: string };
+    const userId = decoded.user_id;
+
+    // ตรวจสอบว่าพบ refresh_token ในฐานข้อมูลหรือไม่
+    const storedToken = await prisma.refreshToken.findFirst({
+      where: {
+        refresh_token: refresh_token,
+        user_id: Number(userId),
+      },
     });
 
-    if (storedToken) {
-      return {
-        status: true,
-        code: HttpStatusCode.OK,
-        data: {},
-      };
-    } else {
+    if (!storedToken) {
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Session expired or already logged out" },
+        error: { message: "Session expired" },
       };
     }
-  } catch (_) {
+
+    // ลบ refresh_token ออกจากฐานข้อมูล
+    const deleteResult = await prisma.refreshToken.deleteMany({
+      where: { refresh_token: refresh_token },
+    });
+
+    if (deleteResult.count === 0) {
+      return {
+        status: false,
+        code: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        error: { message: "Failed to delete the refresh token" },
+      };
+    }
+
+    return {
+      status: true,
+      code: HttpStatusCode.OK,
+      data: {},
+    };
+  } catch (error) {
     return {
       status: false,
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,
-      error: { message: "Internal Server Error" },
+      error: { message: "Internal server error", details: error },
     };
   }
 });
