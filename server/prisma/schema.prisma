@@ -17,7 +17,7 @@ model user {
   id           Int            @id @default(autoincrement())
   username     String         @unique
   password     String
-  points       Float
+  points       Float          @default(0.00)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   RefreshToken refreshToken[]

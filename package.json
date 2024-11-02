@@ -7,14 +7,20 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "prisma:generate": "prisma generate"
+  },
+  "prisma": {
+    "schema": "server/prisma/schema.prisma"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.6.1",
     "@prisma/client": "^5.21.1",
+    "@types/bcrypt": "^5.0.2",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.8.6",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "nuxt": "^3.13.2",
     "pinia": "^2.2.5",
