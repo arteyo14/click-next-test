@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     return {
       status: false,
       code: HttpStatusCode.UNAUTHORIZED,
-      error: { message: "No authorization token provided" },
+      error: { message: "Unauthorized" },
     };
   }
 
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     return {
       status: false,
       code: HttpStatusCode.ACCESS_DENIED,
-      error: { message: "Invalid TOKEN" },
+      error: { message: "Session was expired" },
     };
   }
 });
