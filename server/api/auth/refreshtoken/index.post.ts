@@ -8,7 +8,7 @@ const jwtSecret = config.jwtSecret;
 
 export default defineEventHandler(async (event) => {
   try {
-    const { refresh_token } = await readBody(event);
+    const { access_token, refresh_token } = await readBody(event);
 
     if (!refresh_token) {
       setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // ตรวจสอบว่า token นั้นถูกต้อง
-    const decoded = jwt.verify(refresh_token, jwtSecret) as { user_id: string };
+    const decoded = jwt.verify(access_token, jwtSecret) as { user_id: string };
     const userId = Number(decoded.user_id);
 
     // ค้นหา refreshToken ในฐานข้อมูล
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Invalid token or expired session" },
+        error: { message: "Unauthorized" },
       };
     }
 

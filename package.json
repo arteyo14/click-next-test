@@ -24,6 +24,7 @@
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "nuxt": "^3.13.2",
     "pinia": "^2.2.5",
     "pinia-plugin-persistedstate": "^4.1.2",

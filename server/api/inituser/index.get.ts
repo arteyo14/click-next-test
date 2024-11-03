@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
     const decoded = jwt.verify(token, jwtSecret) as { user_id: number };
     const userId = Number(decoded.user_id);
 
+    // ดึงข้อมูล user
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -39,15 +40,28 @@ export default defineEventHandler(async (event) => {
       return {
         status: false,
         code: HttpStatusCode.NOT_FOUND,
-        error: { message: "ไม่พบผู้้ใช้งาน" },
+        error: { message: "ไม่พบผู้ใช้งาน" },
       };
     }
+
+    // ดึงข้อมูล refreshToken เพื่อดูวันหมดอายุ
+    const refreshToken = await prisma.refreshToken.findFirst({
+      where: { user_id: userId },
+      select: {
+        expires_at: true,
+      },
+    });
+
+    const exp = refreshToken ? refreshToken.expires_at : null;
 
     setResponseStatus(event, HttpStatusCode.OK);
     return {
       status: true,
       code: HttpStatusCode.OK,
-      data: user,
+      data: {
+        ...user,
+        exp,
+      },
     };
   } catch (error) {
     setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
