@@ -1,9 +1,16 @@
 import { useActionStore } from "~~/core/shared/store/ActionStore";
-
-const actionStore = useActionStore();
+import { useNuxtApp } from "#app";
 
 const useAction = (actions: any) => {
-  return actionStore.setActions(actions);
+  const nuxtApp = useNuxtApp();
+  const actionStore = nuxtApp.$pinia ? useActionStore() : null;
+
+  if (actionStore) {
+    return actionStore.setActions(actions);
+  } else {
+    console.warn("Pinia is not initialized yet.");
+    return;
+  }
 };
 
 export default useAction;

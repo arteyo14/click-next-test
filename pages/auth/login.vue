@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LoginForm } from "~/core/modules/auth/login/ui";
+import LoginForm from "~/core/modules/auth/login/ui";
 
 definePageMeta({
   layout: "auth",
@@ -11,7 +11,7 @@ useHead({
 </script>
 
 <template>
-  <div class="d-flex">
+  <div class="d-flex h-100">
     <div class="d-flex flex-column flex-root m-auto">
       <div class="d-flex flex-column-fluid justify-content-center">
         <div class="card rounded-5 w-sm-475px m-5 m-md-0">

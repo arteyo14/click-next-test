@@ -3,7 +3,7 @@ import httpStatusCode from "~~/core/shared/http/HttpStatusCode";
 
 const useHandlerSuccess = (
   statusCode: number,
-  callback: ICallback = { showToast: false, showAlert: false }
+  callback: ICallback = { showAlert: false }
 ) => {
   const options = reactive({
     title: "",
@@ -49,23 +49,6 @@ const useHandlerSuccess = (
     });
   }
 
-  // กรณีแสดง Toast
-  if (callback.showToast) {
-    showToast({
-      title: options.title,
-      message: options.message,
-      type: options.type,
-      callBack: () => {
-        if (callback.fn) {
-          return callback.fn;
-        } else {
-          return navigateTo(callback.to);
-        }
-      },
-    });
-  }
-
-  /* กรณีไม่แสดง Swal, Toast */
   // กรณีมี function
   if (!callback.showAlert && !callback.showToast && callback.fn) {
     return callback.fn();

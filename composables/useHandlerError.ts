@@ -6,7 +6,7 @@ import httpStatusCode from "~~/core/shared/http/HttpStatusCode";
 const useHandlerError = (
   statusCode: number,
   error: IError,
-  callback: ICallback = { showToast: false, showAlert: false }
+  callback: ICallback = { showAlert: false }
 ) => {
   // กรณี ไม่พบข้อมูล
   if (statusCode === httpStatusCode.NOT_FOUND) {
@@ -79,21 +79,21 @@ const useHandlerError = (
     });
   }
 
-  // กรณีแสดง Toast
-  if (callback.showToast) {
-    showToast({
-      title: options.title,
-      message: options.message,
-      type: options.type,
-      callBack: () => {
-        if (callback.fn) {
-          return callback.fn;
-        } else {
-          return navigateTo(callback.to);
-        }
-      },
-    });
-  }
+  // // กรณีแสดง Toast
+  // if (callback.showToast) {
+  //   showToast({
+  //     title: options.title,
+  //     message: options.message,
+  //     type: options.type,
+  //     callBack: () => {
+  //       if (callback.fn) {
+  //         return callback.fn;
+  //       } else {
+  //         return navigateTo(callback.to);
+  //       }
+  //     },
+  //   });
+  // }
 
   /* กรณีไม่แสดง Swal, Toast */
   // กรณีมี function

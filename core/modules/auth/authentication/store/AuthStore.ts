@@ -1,5 +1,5 @@
-import { jwtDecode } from "jwt-decode";
 import { RefreshTokenService, type IUser } from "../infrastructure";
+import { jwtDecode } from "jwt-decode";
 
 export interface IInverval {
   now: string | null;
@@ -21,7 +21,7 @@ export interface IState {
   inverval: IInverval | null;
 }
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore("auth/authentication", {
   state: (): IState => ({
     access_token: "",
     refresh_token: "",

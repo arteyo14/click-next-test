@@ -1,35 +1,31 @@
-import type { IRequestLogin } from "../infrastructure/LoginRequest";
-import { LoginService } from "../infrastructure/LoginService";
+import { LoginService, type ILoginRequest } from "../infrastructure";
 
 interface IState {
+  loading: boolean;
   username: string;
   password: string;
-  loading: boolean;
 }
 
 export const useLoginStore = defineStore("login", {
   state: (): IState => ({
+    loading: false,
     username: "",
     password: "",
-    loading: false,
   }),
   actions: {
     async login() {
-      // Loading
       this.loading = true;
 
-      const params: IRequestLogin = {
+      const params: ILoginRequest = {
         username: this.username,
         password: this.password,
       };
 
-      const loginService = new LoginService();
-      const res = await loginService.login(params);
+      //   const { LoginService } = await import("../infrastructure");
+      const service = new LoginService();
+      const res = await service.login(params);
 
-      // Loading
-      this.loading = false;
-
-      if (res.status === false) {
+      if (!res.status) {
         useHandlerError(res.code, res.error, { showAlert: true });
       } else {
         return res;
