@@ -1,8 +1,7 @@
 import { useInitUserStore } from "~/core/modules/initUser/store";
 
-const store = useInitUserStore();
-
 const useInitUser = () => {
+  const store = useInitUserStore();
   return store.user;
 };
 
