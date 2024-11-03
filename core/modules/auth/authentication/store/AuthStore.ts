@@ -73,7 +73,7 @@ export const useAuthStore = defineStore("auth/authentication", {
           );
 
           // คำนวณเวลาหมดอายุของ access_token
-          if (minutes < Number(config.jwtExpirationTime)) {
+          if (minutes < Number(config.public.jwtExpirationTime)) {
             const refresh_tokenService = new RefreshTokenService();
             const res = await refresh_tokenService.refreshToken({
               access_token: this.access_token,
