@@ -52,12 +52,13 @@ const props = defineProps({
   },
 });
 
-const { meta, resetField, errorMessage, errors } = useField(props.name);
+const { value, meta, resetField, errorMessage, errors } = useField(props.name);
 const selectStart = ref();
 const selectEnd = ref();
 
 const emit = defineEmits(["update:modelValue"]);
 const updateValue = (event: any) => {
+  value.value = event.target.value;
   emit("update:modelValue", event.target.value);
 };
 
@@ -181,6 +182,7 @@ onUnmounted(() => {
 <template>
   <div class="position-relative h-100">
     <VLabel v-show="label !== ''" :label="label" :required="required" />
+    {{ !meta.valid && meta.validated }}
     <VField
       :id="name"
       type="text"
@@ -205,7 +207,7 @@ onUnmounted(() => {
       {{ textEnd }}
     </span>
     <span
-      v-if="!meta.valid && meta.validated"
+      v-if="true"
       class="invalid-feedback"
       :class="{ 'position-absolute': validatePosition }"
       :name="name"

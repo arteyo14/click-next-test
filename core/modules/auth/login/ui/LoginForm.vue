@@ -6,7 +6,17 @@ import { useAuthStore } from "../../authentication/store";
 
 const store = useLoginStore();
 
-const { handleSubmit } = useForm();
+const validatation = computed(() => {
+  const validate: { [key: string]: string } = {};
+
+  if (!store.username || store.username === "") {
+    validate.username = "required";
+  }
+
+  return validate;
+});
+
+const { handleSubmit } = useForm({ validationSchema: validatation });
 
 const onSubmit = handleSubmit(async (_, actions) => {
   useAction(actions);
@@ -28,7 +38,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <form @submit="onSubmit" class="p-4">
+  <form @submit="onSubmit" class="form p-4">
     <h3 class="text-center">เข้าสู่ระบบ</h3>
     <div class="row gap-2 my-4">
       <div class="col-12">
@@ -40,7 +50,7 @@ onUnmounted(() => {
         />
       </div>
       <div class="col-12">
-        <VTextInput
+        <VPasswordInput
           v-model="store.password"
           label="รหัสผ่าน"
           name="password"
