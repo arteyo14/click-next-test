@@ -1,5 +1,5 @@
 import type { IError } from "~/core/shared/http";
-import { useActionStore } from "~/core/shared/store/ActionStore";
+import { useActionStore } from "~/core/shared/store";
 import type { ICallback } from "~/core/shared/types/Callback";
 import httpStatusCode from "~~/core/shared/http/HttpStatusCode";
 
@@ -18,18 +18,14 @@ const useHandlerError = (
 
   // กรณีเซสชั่นหมดอายุ หรือเชื่อมต่อ Api แล้วเซิฟเวอร์ตอบกลับมาเป็น 401
   if (statusCode === httpStatusCode.UNAUTHORIZED) {
-    return navigateTo("/auth/expired");
+    return navigateTo("/auth/login");
   }
 
   // กรณีติด Validate
   if (statusCode === httpStatusCode.VALIDATE) {
     const actions = actionStore.actions;
 
-    const setErrors = () => {
-      return new Promise((resolve) => {
-        resolve(actions.setErrors(error.field));
-      });
-    };
+    actions.setErrors(error.field);
 
     return;
   }

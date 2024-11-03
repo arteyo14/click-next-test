@@ -29,7 +29,5 @@ export default defineNuxtPlugin((nuxtApp) => {
         required: "โปรดระบุ",
       },
     }),
-    validateOnModelUpdate: true,
-    validateOnInput: true,
   });
 });

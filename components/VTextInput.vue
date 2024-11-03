@@ -182,7 +182,6 @@ onUnmounted(() => {
 <template>
   <div class="position-relative h-100">
     <VLabel v-show="label !== ''" :label="label" :required="required" />
-    {{ !meta.valid && meta.validated }}
     <VField
       :id="name"
       type="text"

@@ -6,17 +6,7 @@ import { useAuthStore } from "../../authentication/store";
 
 const store = useLoginStore();
 
-const validatation = computed(() => {
-  const validate: { [key: string]: string } = {};
-
-  if (!store.username || store.username === "") {
-    validate.username = "required";
-  }
-
-  return validate;
-});
-
-const { handleSubmit } = useForm({ validationSchema: validatation });
+const { handleSubmit } = useForm();
 
 const onSubmit = handleSubmit(async (_, actions) => {
   useAction(actions);
