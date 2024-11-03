@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     if (!password) validate.password = "โปรดระบุ";
 
     if (Object.keys(validate).length > 0) {
+      setResponseStatus(event, HttpStatusCode.VALIDATE);
       return {
         status: false,
         code: HttpStatusCode.VALIDATE,
@@ -25,6 +26,7 @@ export default defineEventHandler(async (event) => {
 
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -34,6 +36,7 @@ export default defineEventHandler(async (event) => {
 
     const isValidatePassword = await comparePassword(password, user.password);
     if (!isValidatePassword) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -52,9 +55,13 @@ export default defineEventHandler(async (event) => {
       { expiresIn: "15m" }
     );
 
-    const refreshToken = jwt.sign({ user_id: user.id }, jwtSecret, {
-      expiresIn: "30m",
-    });
+    const refreshToken = jwt.sign(
+      { user_id: user.id, username: user.username },
+      jwtSecret,
+      {
+        expiresIn: "30m",
+      }
+    );
 
     await prisma.refreshToken.create({
       data: {
@@ -63,7 +70,7 @@ export default defineEventHandler(async (event) => {
         expires_at: new Date(Date.now() + 30 * 60 * 1000),
       },
     });
-
+    setResponseStatus(event, HttpStatusCode.OK);
     return {
       status: true,
       code: HttpStatusCode.OK,
@@ -74,6 +81,7 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error) {
     console.error("Authentication error:", error);
+    setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,

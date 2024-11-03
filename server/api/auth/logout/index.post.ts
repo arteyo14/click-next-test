@@ -9,9 +9,9 @@ const jwtSecret = config.jwtSecret;
 export default defineEventHandler(async (event) => {
   try {
     const { refresh_token } = await readBody(event);
-
     // ตรวจสอบว่า refresh_token มีค่าหรือไม่
     if (!refresh_token) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!storedToken) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -45,6 +46,7 @@ export default defineEventHandler(async (event) => {
     });
 
     if (deleteResult.count === 0) {
+      setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
       return {
         status: false,
         code: HttpStatusCode.INTERNAL_SERVER_ERROR,
@@ -58,6 +60,7 @@ export default defineEventHandler(async (event) => {
       data: {},
     };
   } catch (error) {
+    setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,

@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
     const userId = decoded.user_id;
 
     if (!refresh_token) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -32,10 +33,11 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!storedToken) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Invalid or expired session" },
+        error: { message: "Invalid TOKEN or expired session" },
       };
     }
 
@@ -44,6 +46,8 @@ export default defineEventHandler(async (event) => {
       await prisma.refreshToken.delete({
         where: refresh_token,
       });
+
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
 
       return {
         status: false,
@@ -56,6 +60,7 @@ export default defineEventHandler(async (event) => {
     const payload = jwt.verify(refresh_token, jwtSecret) as { user_id: number };
 
     if (!payload) {
+      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
@@ -75,6 +80,8 @@ export default defineEventHandler(async (event) => {
       data: { expires_at: newExpiresAt },
     });
 
+    setResponseStatus(event, HttpStatusCode.OK);
+
     return {
       status: true,
       code: HttpStatusCode.OK,
@@ -84,6 +91,7 @@ export default defineEventHandler(async (event) => {
       },
     };
   } catch (_) {
+    setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,
