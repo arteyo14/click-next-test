@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import HttpStatusCode from "~/core/shared/http/HttpStatusCode";
 
 const config = useRuntimeConfig();
-const jwtSecret = config.jwtSecret;
+const jwtSecret = config.public.jwtSecret;
 export default defineEventHandler(async (event) => {
   const authHeader = event.headers.get("authorization");
 

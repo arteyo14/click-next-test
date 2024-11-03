@@ -11,7 +11,7 @@ export abstract class HttpService {
 
   protected constructor(
     protected readonly path?: string,
-    protected readonly baseURL: string = useRuntimeConfig().apiUrl
+    protected readonly baseURL: string = useRuntimeConfig().public.apiUrl
   ) {
     if (path) {
       baseURL += path;

@@ -8,8 +8,9 @@ export class LoginService extends HttpService {
   }
 
   public login(params: ILoginRequest): Promise<IResponse<ILoginResponse>> {
+    console.log(params);
     return this.http
-      .post("/auth/login", params)
+      .post("auth/login", params)
       .then(this.handleResponse.bind(this))
       .catch(this.handleError.bind(this));
   }

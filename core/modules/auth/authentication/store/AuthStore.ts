@@ -31,7 +31,6 @@ export const useAuthStore = defineStore("auth/authentication", {
   actions: {
     autoRefresh() {
       const config = useRuntimeConfig();
-
       // เรียกใช้ตอน Refresh หน้าเว็บไซต์
       setTimeout(() => {
         this.refresh();
@@ -39,11 +38,13 @@ export const useAuthStore = defineStore("auth/authentication", {
 
       // เรียกใช้แบบ Auto
       console.log(
-        "[JWT] Interval (" + Number(config.autoRefreshJwtInterval) + "min)"
+        "[JWT] Interval (" +
+          Number(config.public.autoRefreshJwtInterval) +
+          "min)"
       );
       setInterval(() => {
         this.refresh();
-      }, Number(config.autoRefreshJwtInterval) * 60 * 1000);
+      }, Number(config.public.autoRefreshJwtInterval) * 60 * 1000);
 
       return Promise.resolve();
     },
@@ -67,7 +68,7 @@ export const useAuthStore = defineStore("auth/authentication", {
           console.log("[JWT] Calculate expiration time... ✅");
           console.log(
             `[JWT] Expiration time (${toNumber(minutes, 2)}/${Number(
-              config.jwtExpirationTime
+              config.public.jwtExpirationTime
             )} min)`
           );
 

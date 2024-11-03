@@ -52,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const { meta, resetField, errorMessage } = useField(props.name);
+const { meta, resetField, errorMessage, errors } = useField(props.name);
 const selectStart = ref();
 const selectEnd = ref();
 
@@ -211,7 +211,11 @@ onUnmounted(() => {
       :name="name"
       v-html="errorMessage"
     ></span>
-    <!-- <VErrorMessage v-show="!meta.valid && meta.validated" class="invalid-feedback" :name="name" /> -->
+    <!-- <VErrorMessage
+      v-show="!meta.valid && meta.validated"
+      class="invalid-feedback"
+      :name="name"
+    /> -->
   </div>
 </template>
 

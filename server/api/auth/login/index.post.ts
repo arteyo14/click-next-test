@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const config = useRuntimeConfig();
-const jwtSecret = config.jwtSecret;
+const jwtSecret = config.public.jwtSecret;
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event);
@@ -20,7 +20,10 @@ export default defineEventHandler(async (event) => {
       return {
         status: false,
         code: HttpStatusCode.VALIDATE,
-        error: validate,
+        error: {
+          field: validate,
+          message: "validate error",
+        },
       };
     }
 

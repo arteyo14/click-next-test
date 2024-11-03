@@ -3,6 +3,7 @@ import LoginForm from "~/core/modules/auth/login/ui";
 
 definePageMeta({
   layout: "auth",
+  // middleware: ["guest"],
 });
 
 useHead({

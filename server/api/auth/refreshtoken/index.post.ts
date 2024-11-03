@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 const config = useRuntimeConfig();
-const jwtSecret = config.jwtSecret;
+const jwtSecret = config.public.jwtSecret;
 
 export default defineEventHandler(async (event) => {
   try {
