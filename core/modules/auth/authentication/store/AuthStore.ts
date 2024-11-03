@@ -152,4 +152,5 @@ export const useAuthStore = defineStore("auth", {
       return false;
     },
   },
+  persist: true,
 });

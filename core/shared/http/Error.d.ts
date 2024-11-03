@@ -1,4 +1,4 @@
 export interface IError {
   message: string;
-  filed?: T;
+  field?: T;
 }
