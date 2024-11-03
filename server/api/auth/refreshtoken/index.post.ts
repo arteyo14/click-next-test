@@ -10,9 +10,6 @@ export default defineEventHandler(async (event) => {
   try {
     const { refresh_token } = await readBody(event);
 
-    const decoded = jwt.verify(refresh_token, jwtSecret) as { user_id: string };
-    const userId = decoded.user_id;
-
     if (!refresh_token) {
       setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
       return {
@@ -24,11 +21,15 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    // ตรวจสอบว่า refreshToken มีอยู่ในฐานข้อมูลและยังไม่หมดอายุ
+    // ตรวจสอบว่า token นั้นถูกต้อง
+    const decoded = jwt.verify(refresh_token, jwtSecret) as { user_id: string };
+    const userId = Number(decoded.user_id);
+
+    // ค้นหา refreshToken ในฐานข้อมูล
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         refresh_token: refresh_token,
-        user_id: Number(userId),
+        user_id: userId,
       },
     });
 
@@ -37,14 +38,14 @@ export default defineEventHandler(async (event) => {
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Invalid TOKEN or expired session" },
+        error: { message: "Invalid token or expired session" },
       };
     }
 
     // ตรวจสอบวันหมดอายุของ refreshToken
     if (new Date() > storedToken.expires_at) {
       await prisma.refreshToken.delete({
-        where: refresh_token,
+        where: { id: storedToken.id },
       });
 
       setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
@@ -52,31 +53,19 @@ export default defineEventHandler(async (event) => {
       return {
         status: false,
         code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Session was expired." },
-      };
-    }
-
-    // ยืนยัน refreshToken ว่ายังถูกต้อง
-    const payload = jwt.verify(refresh_token, jwtSecret) as { user_id: number };
-
-    if (!payload) {
-      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
-      return {
-        status: false,
-        code: HttpStatusCode.UNAUTHORIZED,
-        error: { message: "Session was expired." },
+        error: { message: "Session has expired." },
       };
     }
 
     // สร้าง accessToken ใหม่
-    const newAccessToken = jwt.sign({ user_id: payload.user_id }, jwtSecret, {
+    const newAccessToken = jwt.sign({ user_id: userId }, jwtSecret, {
       expiresIn: "15m",
     });
 
-    // ต่ออายุของ refreshToken โดยอัปเดตในฐานข้อมูล
+    // ต่ออายุของ refreshToken โดยอัปเดตวันหมดอายุในฐานข้อมูล
     const newExpiresAt = new Date(Date.now() + 30 * 60 * 1000); // ต่ออายุอีก 30 นาที
     await prisma.refreshToken.update({
-      where: refresh_token,
+      where: { id: storedToken.id },
       data: { expires_at: newExpiresAt },
     });
 
@@ -90,7 +79,8 @@ export default defineEventHandler(async (event) => {
         refresh_token: refresh_token,
       },
     };
-  } catch (_) {
+  } catch (error) {
+    console.error("Error refreshing token:", error); // เพิ่ม log เพื่อช่วย debug
     setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,
