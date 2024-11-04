@@ -42,15 +42,15 @@ const updateValue = (event: any) => {
 // ปุ่มซ่อน/แสดงรหัสผ่าน
 const passwordFieldType = ref("password");
 const icon = ref("fi-rr-eye-crossed");
-const switchVisibility = () => {
-  if (passwordFieldType.value === "password") {
-    passwordFieldType.value = "text";
-    icon.value = "fi-rr-eye";
-  } else {
-    passwordFieldType.value = "password";
-    icon.value = "fi-rr-eye-crossed";
-  }
-};
+// const switchVisibility = () => {
+//   if (passwordFieldType.value === "password") {
+//     passwordFieldType.value = "text";
+//     icon.value = "fi-rr-eye";
+//   } else {
+//     passwordFieldType.value = "password";
+//     icon.value = "fi-rr-eye-crossed";
+//   }
+// };
 
 onUnmounted(() => {
   resetField({ value: "" });
@@ -71,12 +71,12 @@ onUnmounted(() => {
       :readonly="readonly"
       @input="updateValue"
     />
-    <span
+    <!-- <span
       class="btn btn-sm btn-icon position-absolute translate-middle icon-end"
       @click="switchVisibility"
     >
       <i class="fs-2 text-gray-500" :class="icon"></i>
-    </span>
+    </span> -->
     <span
       v-if="!meta.valid && meta.validated"
       class="invalid-feedback"
