@@ -29,20 +29,20 @@ export default defineEventHandler(async (event) => {
 
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
-      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
+      setResponseStatus(event, HttpStatusCode.BAD_REQUEST);
       return {
         status: false,
-        code: HttpStatusCode.UNAUTHORIZED,
+        code: HttpStatusCode.BAD_REQUEST,
         error: { message: "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง" },
       };
     }
 
     const isValidatePassword = await comparePassword(password, user.password);
     if (!isValidatePassword) {
-      setResponseStatus(event, HttpStatusCode.UNAUTHORIZED);
+      setResponseStatus(event, HttpStatusCode.BAD_REQUEST);
       return {
         status: false,
-        code: HttpStatusCode.UNAUTHORIZED,
+        code: HttpStatusCode.BAD_REQUEST,
         error: { message: "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง" },
       };
     }
