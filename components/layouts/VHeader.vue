@@ -3,7 +3,7 @@ const inituser = useInitUser();
 </script>
 <template>
   <div
-    class="d-flex justify-content-between align-items-center p-2 shadow-sm p-3 mb-5 bg-body rounded w-100"
+    class="d-flex justify-content-between align-items-center p-2 shadow-sm p-3 mb-2 bg-body rounded w-100"
   >
     <div class="d-flex justfy-content-center align-items-center">
       <h3>Click Next Reward Test</h3>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import HomePage from "~/core/modules/home/ui";
+import { HomePage } from "~/core/modules/home/ui";
 
 useHead({
   title: "หน้าหลัก",

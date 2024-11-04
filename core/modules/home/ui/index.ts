@@ -1,3 +1,4 @@
 import HomePage from "./HomePage.vue";
+import HomeBanner from "./HomeBanner.vue";
 
-export default HomePage;
+export { HomePage, HomeBanner };
