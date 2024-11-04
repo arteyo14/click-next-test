@@ -20,5 +20,9 @@ export const useInitUserStore = defineStore("init-user", {
       }
     },
   },
-  getters: {},
+  getters: {
+    getUser(state) {
+      return state.user;
+    },
+  },
 });

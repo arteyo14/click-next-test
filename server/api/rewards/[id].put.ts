@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
         user_id: user_id,
         reward_id: Number(reward_id),
         product_id: Number(id),
+        used_points: used_point,
         redeemed_at: new Date(),
       },
     });

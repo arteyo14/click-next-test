@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const inituser = useInitUser();
+import { useInitUserStore } from "~/core/modules/initUser/store";
+
+const store = useInitUserStore();
 </script>
 <template>
   <div
@@ -15,12 +17,12 @@ const inituser = useInitUser();
         <i class="fi fi-sr-circle-user fs-4 pt-1"></i>
       </div>
       <div>
-        <span>{{ inituser.username }}: </span>
+        <span>{{ store.user.username }}: </span>
         <span class="ps-1">
           {{
-            isNaN(Number(inituser.points))
+            isNaN(Number(store.getUser?.points))
               ? 0
-              : toNumber(Number(inituser.points))
+              : toNumber(Number(store.getUser?.points))
           }}
           points</span
         >

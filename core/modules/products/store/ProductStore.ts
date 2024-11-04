@@ -1,3 +1,4 @@
+import { useInitUserStore } from "../../initUser/store";
 import {
   ProductService,
   type IProductRequest,
@@ -70,7 +71,16 @@ export const useProductStore = defineStore("productStore", {
             const res = await this.updateUserPoints(id);
 
             if (res.status) {
-              useHandlerSuccess(res.code, { showAlert: true });
+              useHandlerSuccess(res.code, {
+                showAlert: true,
+                fn: () => {
+                  const inituserStore = useInitUserStore();
+
+                  inituserStore
+                    .getInitUser()
+                    .then(() => this.getProductDetails(id));
+                },
+              });
             }
           }
         });

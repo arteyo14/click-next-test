@@ -52,6 +52,7 @@ model userRedeem {
   user_id     Int
   reward_id   Int
   product_id  Int
+  used_points Int       @default(0)
   redeemed_at DateTime  @default(now())
   User        user      @relation(fields: [user_id], references: [id])
   Rewards     rewards   @relation(fields: [reward_id], references: [id])

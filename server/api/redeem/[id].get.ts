@@ -6,8 +6,9 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   try {
     const { id } = getRouterParams(event);
+    console.log(id);
 
-    const userRedeem = prisma.userRedeem.findMany({
+    const userRedeem = await prisma.userRedeem.findMany({
       where: {
         user_id: Number(id),
       },
@@ -26,7 +27,7 @@ export default defineEventHandler(async (event) => {
     return {
       status: true,
       code: HttpStatusCode.OK,
-      data: userRedeem ?? [],
+      data: userRedeem,
     };
   } catch (err) {
     setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
