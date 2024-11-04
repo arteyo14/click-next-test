@@ -3,6 +3,8 @@ import { hashPassword } from "~/utils/password";
 
 const prisma = new PrismaClient();
 export const userSeed = async () => {
+  await prisma.refreshToken.deleteMany();
+
   await prisma.user.deleteMany();
 
   await prisma.$executeRaw`ALTER SEQUENCE user_id_seq RESTART WITH 1`;

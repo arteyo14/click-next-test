@@ -11,7 +11,8 @@
     "prisma:generate": "prisma generate"
   },
   "prisma": {
-    "schema": "server/prisma/schema.prisma"
+    "schema": "server/prisma/schema.prisma",
+    "seed": "tsx server/prisma/seed.ts"
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.3.1",
