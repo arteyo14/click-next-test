@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import HomePage from "~/core/modules/home/ui";
+import { Reward } from "~/core/modules/rewards/ui";
 </script>
 <template>
-  <div>
-    <HomePage />
-  </div>
+  <Reward />
 </template>
 <style lang="scss" scoped></style>
