@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     image: postgres:latest
-    container_name: click-next-test_container
+    container_name: click-next-test_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -15,14 +15,31 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
+    container_name: click-next-test_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}  # ใช้ email และรหัสผ่านจาก .env
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - "5050:80"                                      
+      - "5050:80"
     depends_on:
-      - db                                       
+      - db
+
+  nuxt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: click-next-test_nuxt-app
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: sh -c "npx prisma migrate dev --name 'init' && npx prisma db seed && yarn dev"
 
 volumes:
   db_data:
