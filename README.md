@@ -1,76 +1,57 @@
-# Nuxt Minimal Starter
+Project Setup
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project uses Docker Compose to manage services, including a PostgreSQL database, pgAdmin for database management, and a Nuxt application. Follow the instructions below to start the project.
 
-## Setup
+Prerequisites
 
-Make sure to install dependencies:
+    •	Docker and Docker Compose must be installed on your machine.
 
-```bash
-# npm
-npm install
+Setup Instructions
 
-# pnpm
-pnpm install
+    1.	Clone the Repository:
+    git clone <your-repository-url>
+    cd <your-repository-folder>
 
-# yarn
-yarn install
+    2.	Create a .env file in the root directory and set the following environment variables:
+    POSTGRES_USER=your_postgres_username
+    POSTGRES_PASSWORD=your_postgres_password
+    POSTGRES_DB=products-db
+    PGADMIN_DEFAULT_EMAIL=your_pgadmin_email
+    PGADMIN_DEFAULT_PASSWORD=your_pgadmin_password
 
-# bun
-bun install
-```
+    3.	Start Docker Compose:
+    docker compose up --build
 
-## Development Server
+    This command will:
+    •	Start the PostgreSQL database (db).
+    •	Start pgAdmin (pgadmin) at localhost:5050.
+    •	Start the Nuxt application (nuxt-app) at localhost:3000.
 
-Start the development server on `http://localhost:3000`:
+    4.	Run Migrations and Seed the Database:
 
-```bash
-# npm
-npm run dev
+After the containers are up, the Nuxt application container will automatically:
+• Run the Prisma migration to set up the database schema.
+• Seed the database with initial user data.
 
-# pnpm
-pnpm dev
+Access pgAdmin
 
-# yarn
-yarn dev
+To manage the database, open pgAdmin at localhost:5050 and log in with the email and password provided in the .env file. Add a new server connection with the following details:
 
-# bun
-bun run dev
-```
+    •	Hostname: db
+    •	Port: 5432
+    •	Username: POSTGRES_USER from .env
+    •	Password: POSTGRES_PASSWORD from .env
 
-## Production
+Login Credentials
 
-Build the application for production:
+Use the following credentials to log in to the application:
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# click-next-test
+    1.	Admin Account:
+    •	Username: admin
+    •	Password: P@ssw0rd
+    2.	User Account 1:
+    •	Username: user1
+    •	Password: P@ssw0rd
+    3.	User Account 2:
+    •	Username: user2
+    •	Password: P@ssw0rd
