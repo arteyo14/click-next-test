@@ -4,13 +4,13 @@ import HttpStatusCode from "~/core/shared/http/HttpStatusCode";
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  let { id } = getRouterParams(event);
-  let { user_id, used_point } = await readBody(event);
-
-  user_id = Number(user_id);
-  used_point = Number(used_point);
-
   try {
+    const { id } = getRouterParams(event);
+    let { user_id, used_point, products_id } = await readBody(event);
+
+    user_id = Number(user_id);
+    used_point = Number(used_point);
+
     const user = await prisma.user.findUnique({
       where: { id: Number(user_id) },
       select: { points: true },
@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
       data: {
         user_id: user_id,
         reward_id: Number(id),
+        product_id: Number(products_id),
         redeemed_at: new Date(),
       },
     });
@@ -67,7 +68,7 @@ export default defineEventHandler(async (event) => {
       code: HttpStatusCode.OK,
       data: {},
     };
-  } catch (error) {
+  } catch (err) {
     setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,

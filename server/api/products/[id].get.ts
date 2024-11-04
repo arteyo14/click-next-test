@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
         id: true,
         name: true,
         price: true,
+        description: true,
       },
     });
 
@@ -48,7 +49,6 @@ export default defineEventHandler(async (event) => {
       },
     };
   } catch (err) {
-    console.error("Error fetching product redemption status:", err);
     setResponseStatus(event, HttpStatusCode.INTERNAL_SERVER_ERROR);
     return {
       status: false,
