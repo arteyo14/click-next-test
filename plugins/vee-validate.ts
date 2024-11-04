@@ -6,7 +6,7 @@ import {
   defineRule,
   configure,
 } from "vee-validate";
-import { all } from "@vee-validate/rules";
+import allRules from "@vee-validate/rules";
 import { localize } from "@vee-validate/i18n";
 import th from "@vee-validate/i18n/dist/locale/th.json";
 
@@ -16,8 +16,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("VErrorMessage", ErrorMessage);
   nuxtApp.vueApp.component("VFieldArray", FieldArray);
 
-  Object.keys(all).forEach((rule) => {
-    defineRule(rule, all[rule]);
+  Object.keys(allRules).forEach((rule) => {
+    defineRule(rule, allRules[rule]);
   });
 
   // Activate the locale
