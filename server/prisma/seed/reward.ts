@@ -15,7 +15,7 @@ export const rewardSeeding = async () => {
 
   const rewardsData = products.map((product) => ({
     product_id: product.id,
-    points_required: Math.floor(Math.random() * 50) * 10 + 50,
+    points_required: Math.floor(Math.random() * 6) * 10 + 50,
     description: `Reward for product ${product.id}`,
     expires_at: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   }));

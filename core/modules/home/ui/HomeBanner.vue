@@ -31,10 +31,11 @@ defineProps({
     <!-- Carousel Items -->
     <div class="carousel-inner">
       <div
-        class="carousel-item"
+        class="carousel-item cursor-pointer"
         v-for="(item, index) in products"
         :key="index"
         :class="{ active: index === 0 }"
+        @click="navigateTo(`/product/${item.id}`)"
       >
         <img
           :src="`products/${item.image_url}`"

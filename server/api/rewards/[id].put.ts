@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   try {
     const { id } = getRouterParams(event);
-    let { user_id, used_point, products_id } = await readBody(event);
+    let { user_id, used_point, reward_id } = await readBody(event);
 
     user_id = Number(user_id);
     used_point = Number(used_point);
@@ -46,8 +46,8 @@ export default defineEventHandler(async (event) => {
     await prisma.userRedeem.create({
       data: {
         user_id: user_id,
-        reward_id: Number(id),
-        product_id: Number(products_id),
+        reward_id: Number(reward_id),
+        product_id: Number(id),
         redeemed_at: new Date(),
       },
     });
