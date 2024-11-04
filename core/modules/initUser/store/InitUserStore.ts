@@ -5,7 +5,7 @@ interface IState {
 }
 
 export const useInitUserStore = defineStore("init-user", {
-  state: () => ({
+  state: (): IState => ({
     user: {} as IInitUser,
   }),
   actions: {
