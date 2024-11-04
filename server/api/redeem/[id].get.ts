@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   try {
     const { id } = getRouterParams(event);
-    console.log(id);
 
     const userRedeem = await prisma.userRedeem.findMany({
       where: {
