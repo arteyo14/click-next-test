@@ -93,12 +93,12 @@ const useHandlerError = (
 
   /* กรณีไม่แสดง Swal, Toast */
   // กรณีมี function
-  if (!callback.showAlert && !callback.showToast && callback.fn) {
+  if (!callback.showAlert && callback.fn) {
     return callback.fn();
   }
 
   // กรณีให้ Redirect
-  if (!callback.showAlert && !callback.showToast && callback.to) {
+  if (!callback.showAlert && callback.to) {
     return navigateTo(callback.to);
   }
 };
