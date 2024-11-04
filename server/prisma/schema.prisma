@@ -25,34 +25,37 @@ model user {
 }
 
 model products {
-  id               Int       @id @default(autoincrement())
+  id               Int          @id @default(autoincrement())
   name             String
   description      String
   image_url        String
-  price            Float     @default(0.00)
-  discounted_price Float     @default(0.00)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
-  Rewards          rewards[]
+  price            Float        @default(0.00)
+  discounted_price Float        @default(0.00)
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  reward           rewards?
+  userRedeem       userRedeem[]
 }
 
 model rewards {
   id              Int          @id @default(autoincrement())
-  product_id      Int
+  product_id      Int          @unique
   points_required Float
-  desicription    String
+  description     String
   expires_at      DateTime
   Product         products     @relation(fields: [product_id], references: [id])
   UserRedeem      userRedeem[]
 }
 
 model userRedeem {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   user_id     Int
   reward_id   Int
-  redeemed_at DateTime @default(now())
-  User        user     @relation(fields: [user_id], references: [id])
-  Rewards     rewards  @relation(fields: [reward_id], references: [id])
+  product_id  Int
+  redeemed_at DateTime  @default(now())
+  User        user      @relation(fields: [user_id], references: [id])
+  Rewards     rewards   @relation(fields: [reward_id], references: [id])
+  products    products? @relation(fields: [product_id], references: [id])
 }
 
 model refreshToken {
