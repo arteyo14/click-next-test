@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     return {
       status: false,
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,
-      error: { message: "Internal server error", details: error },
+      error: { message: "Internal server error" },
     };
   }
 });
