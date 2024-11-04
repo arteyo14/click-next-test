@@ -9,15 +9,19 @@ export const userSeed = async () => {
 
   await prisma.$executeRaw`ALTER SEQUENCE user_id_seq RESTART WITH 1`;
 
-  let password = "@rteyo_14";
+  let password = "P@ssw0rd";
 
   password = await hashPassword(password);
 
-  await prisma.user.create({
-    data: {
-      username: "admin",
-      password,
-      points: 100.0,
-    },
+  await prisma.user.createMany({
+    data: [
+      {
+        username: "admin",
+        password,
+        points: 100.0,
+      },
+      { username: "user1", password, points: 100.0 },
+      { username: "user2", password, points: 100.0 },
+    ],
   });
 };
