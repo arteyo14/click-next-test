@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const { id } = getRouterParams(event);
-  const { user_id } = await readBody(event); // รับ user_id จาก body
 
   try {
     // ค้นหาข้อมูลสินค้า
@@ -13,9 +12,13 @@ export default defineEventHandler(async (event) => {
       where: { id: Number(id) },
       select: {
         id: true,
+        image_url: true,
         name: true,
         price: true,
+        discounted_price: true,
         description: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
@@ -28,24 +31,12 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    // ตรวจสอบว่า user_id เคย redeem reward นี้หรือยัง
-    const redeemed = await prisma.userRedeem.findFirst({
-      where: {
-        user_id: Number(user_id),
-        reward_id: Number(id),
-      },
-    });
-
-    // ถ้าเคย redeem, set was_redeemed เป็น true, ไม่เคยเป็น false
-    const was_redeemed = redeemed ? true : false;
-
     setResponseStatus(event, HttpStatusCode.OK);
     return {
       status: true,
       code: HttpStatusCode.OK,
       data: {
         ...product,
-        was_redeemed,
       },
     };
   } catch (err) {
